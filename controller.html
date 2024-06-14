@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Universal Controller</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .control-container {
+            margin: 10px 0;
+        }
+
+        .control-container input[type="text"],
+        .control-container input[type="number"] {
+            width: 80px;
+        }
+
+        .control-container button,
+        .control-container input[type="submit"] {
+            width: 100px;
+            height: 40px;
+            margin: 5px;
+        }
+
+        .qr-code {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Universal Controller</h2>
+    <div id="qrCode" class="qr-code"></div>
+    <div id="controller">
+        <p id="userName"></p>
+        <p id="callNumberDisplay"></p>
+        <div class="control-container">
+            <button id="upButton">Up</button>
+            <button id="downButton">Down</button>
+        </div>
+        <div class="control-container">
+            <button id="leftButton">Left</button>
+            <button id="rightButton">Right</button>
+        </div>
+        <div class="control-container">
+            <label for="slider1">Slider 1:</label>
+            <input type="range" id="slider1" min="0" max="100">
+        </div>
+        <div class="control-container">
+            <label for="slider2">Slider 2:</label>
+            <input type="range" id="slider2" min="0" max="100">
+        </div>
+        <div class="control-container">
+            <label for="choice">Choice:</label>
+            <select id="choice">
+                <option value="1">Choice 1</option>
+                <option value="2">Choice 2</option>
+                <option value="3">Choice 3</option>
+                <option value="4">Choice 4</option>
+                <option value="5">Choice 5</option>
+                <option value="6">Choice 6</option>
+            </select>
+        </div>
+        <div class="control-container">
+            <label for="textInput">Text:</label>
+            <input type="text" id="textInput">
+        </div>
+        <div class="control-container">
+            <input type="submit" id="submitButton" value="Submit">
+        </div>
+        <div id="resultLog"></div>
+    </div>
+
+    <!-- Firebase setup -->
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-functions.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+
+    <script>
+        // Function to get Firebase config from Cloud Function
+        async function getFirebaseConfig() {
+            const response = await firebase.functions().httpsCallable('getFirebaseConfig')();
+            return response.data;
+        }
+
+        // Parse query parameters
+        function getQueryParam(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+
+        // Initialize Firebase with fetched config
+        getFirebaseConfig().then(config => {
+            firebase.initializeApp(config);
+            const db = firebase.firestore();
+            const auth = firebase.auth();
+            const functions = firebase.functions();
+
+            // QR Code Generation
+            const callNumber = getQueryParam('callNumber');
+            document.getElementById('callNumberDisplay').textContent = `Call Number: ${callNumber}`;
+            const qr = new QRious({
+                element: document.getElementById('qrCode'),
+                size: 200,
+                value: `${window.location.origin}/controller.html?callNumber=${callNumber}`
+            });
+
+            // Authentication
+            auth.signInAnonymously().catch(error => {
+                console.error(error.message);
+            });
+
+            auth.onAuthStateChanged(user => {
+                if (user) {
+                    const userId = user.uid;
+                    document.getElementById('userName').textContent = `User: ${userId}`;
+
+                    // Event listeners for controls
+                    document.getElementById('upButton').addEventListener('click', () => handleControl('up'));
+                    document.getElementById('downButton').addEventListener('click', () => handleControl('down'));
+                    document.getElementById('leftButton').addEventListener('click', () => handleControl('left'));
+                    document.getElementById('rightButton').addEventListener('click', () => handleControl('right'));
+                    document.getElementById('slider1').addEventListener('input', (e) => handleControl('slider1', e.target.value));
+                    document.getElementById('slider2').addEventListener('input', (e) => handleControl('slider2', e.target.value));
+                    document.getElementById('choice').addEventListener('change', (e) => handleControl('choice', e.target.value));
+                    document.getElementById('textInput').addEventListener('input', (e) => handleControl('text', e.target.value));
+                    document.getElementById('submitButton').addEventListener('click', () => handleControl('submit'));
+
+                    function handleControl(control, value) {
+                        const controlData = {
+                            userId,
+                            callNumber,
+                            control,
+                            value: value || null,
+                            timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                        };
+
+                        db.collection('controls').add(controlData).then(() => {
+                            logResult(controlData);
+                        }).catch(error => {
+                            console.error(error.message);
+                        });
+                    }
+
+                    function logResult(controlData) {
+                        const log = document.getElementById('resultLog');
+                        const logEntry = document.createElement('div');
+                        logEntry.textContent = `User: ${controlData.userId}, Control: ${controlData.control}, Value: ${controlData.value}, Time: ${controlData.timestamp}`;
+                        log.appendChild(logEntry);
+                    }
+                }
+            });
+        }).catch(error => {
+            console.error("Error fetching Firebase config: ", error);
+        });
+    </script>
+</body>
+</html>
