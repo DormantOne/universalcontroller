@@ -9,11 +9,9 @@
             const url = `controller-governor.html?callNumber=${callNumber}`;
             window.open(url, 'ControllerGovernor', 'width=800,height=600');
         }
-
-        window.onload = generateCallNumber;
     </script>
 </head>
 <body>
-    <p>Generating Call Number...</p>
+    <button onclick="generateCallNumber()">Generate Call Number</button>
 </body>
 </html>
