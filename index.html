@@ -7,7 +7,7 @@
         function generateCallNumber() {
             const callNumber = Math.floor(Math.random() * 1000000);
             const url = `controller-governor.html?callNumber=${callNumber}`;
-            window.location.href = url;
+            window.open(url, 'ControllerGovernor', 'width=800,height=600');
         }
 
         window.onload = generateCallNumber;
