@@ -71,7 +71,7 @@
             const qr = new QRious({
                 element: document.getElementById('qrCode'),
                 size: 200,
-                value: `${window.location.origin}/controller.html?callNumber=${callNumber}`
+                value: `https://dormantone.github.io/universalcontroller/controller.html?callNumber=${callNumber}`
             });
 
             auth.signInAnonymously().catch(error => {
