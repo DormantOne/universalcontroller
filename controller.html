@@ -34,6 +34,11 @@
 <body>
     <h2>Universal Controller</h2>
     <div id="controller">
+        <div class="control-container">
+            <label for="userNameInput">Your Name:</label>
+            <input type="text" id="userNameInput">
+            <button id="saveNameButton">Save</button>
+        </div>
         <p id="userName"></p>
         <p id="callNumberDisplay"></p>
         <div class="control-container">
@@ -114,11 +119,28 @@
             auth.onAuthStateChanged(user => {
                 if (user) {
                     const userId = user.uid;
-                    document.getElementById('userName').textContent = `User: ${userId}`;
+                    const userNameElement = document.getElementById('userName');
+                    const userNameInput = document.getElementById('userNameInput');
+                    const savedUserName = localStorage.getItem('userName');
+
+                    if (savedUserName) {
+                        userNameInput.value = savedUserName;
+                        userNameElement.textContent = `User: ${savedUserName}`;
+                    } else {
+                        userNameElement.textContent = `User: ${userId}`;
+                    }
+
+                    document.getElementById('saveNameButton').addEventListener('click', () => {
+                        const userName = userNameInput.value;
+                        localStorage.setItem('userName', userName);
+                        userNameElement.textContent = `User: ${userName}`;
+                    });
 
                     function handleControl(control, value) {
+                        const userName = localStorage.getItem('userName') || userId;
                         const controlData = {
                             userId,
+                            userName,
                             callNumber,
                             control,
                             value: value || null,
