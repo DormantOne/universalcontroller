@@ -96,11 +96,16 @@
                     console.log("User signed in anonymously:", userId);
 
                     // Generate QR code after user is signed in
+                    const qrElement = document.getElementById('qrCode');
                     const qr = new QRious({
-                        element: document.getElementById('qrCode'),
+                        element: qrElement,
                         size: 200,
                         value: `https://dormantone.github.io/universalcontroller/controller.html?callNumber=${callNumber}`
                     });
+
+                    // Explicitly render the QR code canvas
+                    qrElement.innerHTML = '';
+                    qrElement.appendChild(qr.canvas);
 
                     console.log("QRious library output:", qr);
 
