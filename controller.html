@@ -16,16 +16,31 @@
 
         .control-container input[type="text"],
         .control-container input[type="number"] {
-            width: 80px;
+            width: 150px; /* Increase width */
+            font-size: 1.2em; /* Increase font size */
         }
 
         .control-container button,
         .control-container input[type="submit"] {
-            width: 100px;
-            height: 40px;
+            width: 150px; /* Increase width */
+            height: 50px; /* Increase height */
             margin: 5px;
+            font-size: 1.2em; /* Increase font size */
         }
 
+        .control-container label {
+            font-size: 1.2em; /* Increase font size */
+        }
+
+        .control-container select {
+            width: 150px; /* Increase width */
+            font-size: 1.2em; /* Increase font size */
+        }
+
+        .control-container input[type="range"] {
+            width: 150px; /* Increase width */
+        }
+        
         .qr-code {
             margin-top: 20px;
         }
@@ -160,9 +175,10 @@
                     document.getElementById('rightButton').addEventListener('click', () => handleControl('right'));
                     document.getElementById('slider1').addEventListener('input', (e) => handleControl('slider1', e.target.value));
                     document.getElementById('slider2').addEventListener('input', (e) => handleControl('slider2', e.target.value));
-                    document.getElementById('choice').addEventListener('change', (e) => handleControl('choice', e.target.value));
-                    document.getElementById('textInput').addEventListener('input', (e) => handleControl('text', e.target.value));
-                    document.getElementById('submitButton').addEventListener('click', () => handleControl('submit'));
+                    document.getElementById('submitButton').addEventListener('click', () => {
+                        handleControl('choice', document.getElementById('choice').value);
+                        handleControl('text', document.getElementById('textInput').value);
+                    });
                 }
             });
         }).catch(error => {
