@@ -8,8 +8,8 @@
             font-family: Arial, sans-serif;
             text-align: center;
             display: flex;
-            justify-content: flex-start;
-            align-items: flex-start;
+            flex-direction: column; /* Align items vertically */
+            align-items: center; /* Center align */
             margin-top: 20px;
         }
 
@@ -20,10 +20,10 @@
         #resultLog {
             margin-top: 20px;
             text-align: left;
-            max-width: 200px; /* Narrower width */
+            width: 200px; /* Narrower width */
             height: 100vh;
             overflow-y: auto;
-            margin-left: 20px;
+            margin: 20px 0; /* Center it vertically */
         }
 
         .log-entry {
