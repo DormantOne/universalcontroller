@@ -77,18 +77,21 @@
                 return;
             }
             
+            console.log("Firebase config fetched:", config);
             firebase.initializeApp(config);
             const db = firebase.firestore();
             const auth = firebase.auth();
             const functions = firebase.functions();
 
             const callNumber = getQueryParam('callNumber');
+            console.log("Call Number:", callNumber);
             document.getElementById('callNumberDisplay').textContent = `Call Number: ${callNumber}`;
             const qr = new QRious({
                 element: document.getElementById('qrCode'),
                 size: 200,
                 value: `https://dormantone.github.io/universalcontroller/controller.html?callNumber=${callNumber}`
             });
+            console.log("QR code generated");
 
             auth.signInAnonymously().catch(error => {
                 console.error('Failed to sign in anonymously:', error.message);
@@ -97,6 +100,7 @@
             auth.onAuthStateChanged(user => {
                 if (user) {
                     const userId = user.uid;
+                    console.log("User signed in anonymously:", userId);
 
                     // Listen for actions in Firestore
                     db.collection('actions').where('callNumber', '==', callNumber)
