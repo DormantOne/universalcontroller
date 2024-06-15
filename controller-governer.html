@@ -91,7 +91,7 @@
             });
 
             auth.signInAnonymously().catch(error => {
-                console.error(error.message);
+                console.error('Failed to sign in anonymously:', error.message);
             });
 
             auth.onAuthStateChanged(user => {
