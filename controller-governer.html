@@ -17,7 +17,7 @@
         #resultLog {
             margin-top: 20px;
             text-align: left;
-            max-width: 600px;
+            max-width: 400px; /* Narrower width */
             margin: 20px auto;
         }
 
@@ -84,25 +84,12 @@
             const functions = firebase.functions();
 
             const callNumber = getQueryParam('callNumber');
-            console.log("Call Number:", callNumber);
             document.getElementById('callNumberDisplay').textContent = `Call Number: ${callNumber}`;
-
-            // Explicitly create a canvas element for QRious
-            const qrElement = document.createElement('canvas');
-            document.getElementById('qrCode').appendChild(qrElement);
-
             const qr = new QRious({
-                element: qrElement,
+                element: document.getElementById('qrCode'),
                 size: 200,
                 value: `https://dormantone.github.io/universalcontroller/controller.html?callNumber=${callNumber}`
             });
-
-            // Check if the QRious library correctly created the canvas
-            if (qrElement) {
-                console.log("QR code canvas successfully created:", qrElement);
-            } else {
-                console.error("Failed to create QR code canvas.");
-            }
 
             auth.signInAnonymously().catch(error => {
                 console.error('Failed to sign in anonymously:', error.message);
@@ -115,7 +102,7 @@
 
                     // Listen for actions in Firestore
                     db.collection('actions').where('callNumber', '==', callNumber)
-                      .orderBy('timestamp', 'asc')
+                      .orderBy('timestamp', 'desc') // Order by descending to get most recent on top
                       .onSnapshot(snapshot => {
                         const log = document.getElementById('resultLog');
                         log.innerHTML = '';
@@ -123,7 +110,7 @@
                             const data = doc.data();
                             const logEntry = document.createElement('div');
                             logEntry.className = 'log-entry';
-                            logEntry.textContent = `User: ${data.userId}, Control: ${data.control}, Value: ${data.value}, Time: ${data.timestamp.toDate()}`;
+                            logEntry.textContent = `User: ${data.userName} (${data.userId}), Control: ${data.control}, Value: ${data.value}, Time: ${data.timestamp.toDate()}`;
                             log.appendChild(logEntry);
                         });
                     });
