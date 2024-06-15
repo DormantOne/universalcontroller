@@ -85,11 +85,6 @@
 
             const callNumber = getQueryParam('callNumber');
             document.getElementById('callNumberDisplay').textContent = `Call Number: ${callNumber}`;
-            const qr = new QRious({
-                element: document.getElementById('qrCode'),
-                size: 200,
-                value: `https://dormantone.github.io/universalcontroller/controller.html?callNumber=${callNumber}`
-            });
 
             auth.signInAnonymously().catch(error => {
                 console.error('Failed to sign in anonymously:', error.message);
@@ -99,6 +94,15 @@
                 if (user) {
                     const userId = user.uid;
                     console.log("User signed in anonymously:", userId);
+
+                    // Generate QR code after user is signed in
+                    const qr = new QRious({
+                        element: document.getElementById('qrCode'),
+                        size: 200,
+                        value: `https://dormantone.github.io/universalcontroller/controller.html?callNumber=${callNumber}`
+                    });
+
+                    console.log("QRious library output:", qr);
 
                     // Listen for actions in Firestore
                     db.collection('actions').where('callNumber', '==', callNumber)
