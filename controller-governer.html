@@ -8,9 +8,6 @@
             font-family: Arial, sans-serif;
             text-align: center;
             margin-top: 20px;
-            max-width: 200px; /* Narrower window width */
-            margin-left: auto;
-            margin-right: auto;
         }
 
         .qr-code {
@@ -20,9 +17,8 @@
         #resultLog {
             margin-top: 20px;
             text-align: left;
-            width: 100%; /* Use full width of the narrow window */
-            height: 100vh;
-            overflow-y: auto;
+            max-height: 80vh; /* Limit height */
+            overflow-y: auto; /* Enable vertical scroll only when necessary */
             margin: 20px 0;
         }
 
