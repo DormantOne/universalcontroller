@@ -98,6 +98,14 @@
             // Check if the QRious library correctly created the canvas
             console.log("QRious library output:", qr);
 
+            // Check if the QR code element contains the generated canvas
+            const qrCanvas = qrElement.querySelector('canvas');
+            if (qrCanvas) {
+                console.log("QR code canvas successfully created:", qrCanvas);
+            } else {
+                console.error("Failed to create QR code canvas.");
+            }
+
             auth.signInAnonymously().catch(error => {
                 console.error('Failed to sign in anonymously:', error.message);
             });
