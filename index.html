@@ -2,16 +2,33 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Generate Call Number</title>
-    <script>
-        function generateCallNumber() {
-            const callNumber = Math.floor(Math.random() * 1000000);
-            const url = `https://dormantone.github.io/universalcontroller/controller-governer.html?callNumber=${callNumber}`;
-            window.open(url, 'ControllerGovernor', 'width=800,height=600');
+    <title>Universal Controller Index</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 20px;
         }
-    </script>
+
+        button {
+            margin-top: 20px;
+            font-size: 1.2em;
+            padding: 10px 20px;
+        }
+    </style>
 </head>
 <body>
-    <button onclick="generateCallNumber()">Generate Call Number</button>
+    <h2>Universal Controller</h2>
+    <button id="generateCallNumberButton">Generate Call Number</button>
+
+    <script>
+        document.getElementById('generateCallNumberButton').addEventListener('click', () => {
+            const callNumber = Math.floor(Math.random() * 900000) + 100000;
+            const governorUrl = `https://dormantone.github.io/universalcontroller/controller-governor.html?callNumber=${callNumber}`;
+            
+            // Open the governor window with specified dimensions
+            window.open(governorUrl, '_blank', 'width=400,height=800'); // Adjust width and height as needed
+        });
+    </script>
 </body>
 </html>
