@@ -86,12 +86,17 @@
             const callNumber = getQueryParam('callNumber');
             console.log("Call Number:", callNumber);
             document.getElementById('callNumberDisplay').textContent = `Call Number: ${callNumber}`;
+
+            // Ensure the QR code is correctly generated and appended
+            const qrElement = document.getElementById('qrCode');
             const qr = new QRious({
-                element: document.getElementById('qrCode'),
+                element: qrElement,
                 size: 200,
                 value: `https://dormantone.github.io/universalcontroller/controller.html?callNumber=${callNumber}`
             });
-            console.log("QR code generated");
+
+            // Check if the QRious library correctly created the canvas
+            console.log("QRious library output:", qr);
 
             auth.signInAnonymously().catch(error => {
                 console.error('Failed to sign in anonymously:', error.message);
