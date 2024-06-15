@@ -87,8 +87,10 @@
             console.log("Call Number:", callNumber);
             document.getElementById('callNumberDisplay').textContent = `Call Number: ${callNumber}`;
 
-            // Ensure the QR code is correctly generated and appended
-            const qrElement = document.getElementById('qrCode');
+            // Explicitly create a canvas element for QRious
+            const qrElement = document.createElement('canvas');
+            document.getElementById('qrCode').appendChild(qrElement);
+
             const qr = new QRious({
                 element: qrElement,
                 size: 200,
@@ -96,12 +98,8 @@
             });
 
             // Check if the QRious library correctly created the canvas
-            console.log("QRious library output:", qr);
-
-            // Check if the QR code element contains the generated canvas
-            const qrCanvas = qrElement.querySelector('canvas');
-            if (qrCanvas) {
-                console.log("QR code canvas successfully created:", qrCanvas);
+            if (qrElement) {
+                console.log("QR code canvas successfully created:", qrElement);
             } else {
                 console.error("Failed to create QR code canvas.");
             }
